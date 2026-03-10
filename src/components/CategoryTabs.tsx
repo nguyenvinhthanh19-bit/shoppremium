@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import type { Category } from "@/data/services";
 
 type Props = {
@@ -13,22 +14,31 @@ const CategoryTabs = ({ categories, activeCategory, onSelect }: Props) => {
         {categories.map((cat) => {
           const isActive = cat.id === activeCategory;
           return (
-            <button
+            <motion.button
               key={cat.id}
               onClick={() => onSelect(cat.id)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               className={`
-                flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
+                relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap
                 ${
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-[var(--shadow-glow)]"
+                    ? "text-primary-foreground"
                     : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
                 }
               `}
             >
-              <span>{cat.icon}</span>
-              <span>{cat.name}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 rounded-lg bg-primary shadow-[var(--shadow-glow)]"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{cat.icon}</span>
+              <span className="relative z-10">{cat.name}</span>
               <span
-                className={`text-xs px-1.5 py-0.5 rounded-md ${
+                className={`relative z-10 text-xs px-1.5 py-0.5 rounded-md ${
                   isActive
                     ? "bg-primary-foreground/20 text-primary-foreground"
                     : "bg-muted text-muted-foreground"
@@ -36,7 +46,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelect }: Props) => {
               >
                 {cat.services.length}
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

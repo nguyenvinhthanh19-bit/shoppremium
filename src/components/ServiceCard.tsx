@@ -11,6 +11,7 @@ type Props = {
 
 const ServiceCard = ({ service, index }: Props) => {
   const [expanded, setExpanded] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
   const lowestPrice = service.plans
     .filter((p) => p.price !== "Liên hệ")
     .map((p) => parseInt(p.price.replace(/\./g, "").replace(" đ", "")))

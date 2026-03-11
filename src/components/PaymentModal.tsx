@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy, Check, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import type { Service, ServicePlan } from "@/data/services";
-import qrImage from "@/assets/qr-payment.png";
+import qrBank from "@/assets/qr-payment.png";
+import qrMomo from "@/assets/qr-momo.png";
 
 type Props = {
   open: boolean;

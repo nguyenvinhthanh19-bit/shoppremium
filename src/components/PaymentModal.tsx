@@ -193,6 +193,7 @@ export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) =>
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

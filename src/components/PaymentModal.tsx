@@ -36,7 +36,7 @@ export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) =>
 
   const transferContent = `${service.name} - ${plan?.accountType || ""} - ${plan?.duration || ""}`;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div

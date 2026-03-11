@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Service } from "@/data/services";
-import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { ChevronDown, ExternalLink, QrCode } from "lucide-react";
+import { PaymentModal } from "./PaymentModal";
 
 type Props = {
   service: Service;

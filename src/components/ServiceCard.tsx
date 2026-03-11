@@ -105,19 +105,33 @@ const ServiceCard = ({ service, index }: Props) => {
       </div>
 
       {/* Bottom action */}
-      <div className="px-4 py-3 border-t border-border bg-muted/30">
+      <div className="px-4 py-3 border-t border-border bg-muted/30 flex gap-2">
+        <motion.button
+          onClick={() => setPaymentOpen(true)}
+          className="flex items-center justify-center gap-2 flex-1 text-xs font-medium py-2.5 rounded-lg bg-primary text-primary-foreground transition-colors duration-200"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <QrCode className="w-3.5 h-3.5" />
+          Mua ngay
+        </motion.button>
         <motion.a
           href="https://zalo.me/0944308352"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full text-xs font-medium py-2.5 rounded-lg bg-primary/10 text-primary transition-colors duration-200"
-          whileHover={{ backgroundColor: "hsl(175 80% 50% / 0.2)" }}
+          className="flex items-center justify-center gap-2 text-xs font-medium py-2.5 px-3 rounded-lg bg-primary/10 text-primary transition-colors duration-200"
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          💬 Liên hệ mua ngay
-          <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+          💬
         </motion.a>
       </div>
+
+      <PaymentModal
+        open={paymentOpen}
+        onClose={() => setPaymentOpen(false)}
+        service={service}
+      />
     </motion.div>
   );
 };

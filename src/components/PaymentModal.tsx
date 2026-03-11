@@ -20,6 +20,7 @@ const BANK_INFO = {
 
 export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) => {
   const [copied, setCopied] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"bank" | "momo">("bank");
   const [selectedIdx, setSelectedIdx] = useState(
     selectedPlan ? service.plans.indexOf(selectedPlan) : 0
   );

@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy, Check, MessageCircle } from "lucide-react";
 import { useState } from "react";
@@ -35,7 +36,7 @@ export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) =>
 
   const transferContent = `${service.name} - ${plan?.accountType || ""} - ${plan?.duration || ""}`;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -192,6 +193,7 @@ export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) =>
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

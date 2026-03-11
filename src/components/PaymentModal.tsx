@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy, Check, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import type { Service, ServicePlan } from "@/data/services";
-import qrImage from "@/assets/qr-payment.png";
+import qrBank from "@/assets/qr-payment.png";
+import qrMomo from "@/assets/qr-momo.png";
 
 type Props = {
   open: boolean;
@@ -19,6 +20,7 @@ const BANK_INFO = {
 
 export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) => {
   const [copied, setCopied] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"bank" | "momo">("bank");
   const [selectedIdx, setSelectedIdx] = useState(
     selectedPlan ? service.plans.indexOf(selectedPlan) : 0
   );
@@ -94,10 +96,38 @@ export const PaymentModal = ({ open, onClose, service, selectedPlan }: Props) =>
               </div>
             )}
 
+            {/* Payment method tabs */}
+            <div className="flex gap-1 mb-4 p-1 rounded-lg bg-muted/50">
+              <button
+                onClick={() => setPaymentMethod("bank")}
+                className={`flex-1 text-xs font-medium py-2 rounded-md transition-colors ${
+                  paymentMethod === "bank"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🏦 Ngân hàng
+              </button>
+              <button
+                onClick={() => setPaymentMethod("momo")}
+                className={`flex-1 text-xs font-medium py-2 rounded-md transition-colors ${
+                  paymentMethod === "momo"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                💜 MoMo
+              </button>
+            </div>
+
             {/* QR Code */}
             <div className="flex justify-center mb-4">
               <div className="rounded-xl overflow-hidden bg-white p-2">
-                <img src={qrImage} alt="QR Thanh toán" className="w-56 h-auto" />
+                <img
+                  src={paymentMethod === "bank" ? qrBank : qrMomo}
+                  alt={paymentMethod === "bank" ? "QR Ngân hàng" : "QR MoMo"}
+                  className="w-56 h-auto"
+                />
               </div>
             </div>
 

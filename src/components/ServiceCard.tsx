@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Service } from "@/data/services";
-import { ChevronDown, ExternalLink, QrCode } from "lucide-react";
-import { PaymentModal } from "./PaymentModal";
+import { ChevronDown, ShoppingCart, Plus } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 type Props = {
   service: Service;
@@ -11,7 +12,8 @@ type Props = {
 
 const ServiceCard = ({ service, index }: Props) => {
   const [expanded, setExpanded] = useState(false);
-  const [paymentOpen, setPaymentOpen] = useState(false);
+  const { addItem } = useCart();
+
   const lowestPrice = service.plans
     .filter((p) => p.price !== "Liên hệ")
     .map((p) => parseInt(p.price.replace(/\./g, "").replace(" đ", "")))
@@ -20,6 +22,15 @@ const ServiceCard = ({ service, index }: Props) => {
   const displayPrice = lowestPrice
     ? `${lowestPrice.toLocaleString("vi-VN")} đ`
     : "Liên hệ";
+
+  const handleAddToCart = (planIndex: number) => {
+    const plan = service.plans[planIndex];
+    addItem(service, plan);
+    toast.success(`Đã thêm ${service.name} vào giỏ hàng`, {
+      description: `${plan.accountType} — ${plan.duration}`,
+      duration: 2000,
+    });
+  };
 
   return (
     <motion.div
@@ -93,9 +104,18 @@ const ServiceCard = ({ service, index }: Props) => {
                       </span>
                       <span className="text-muted-foreground">{plan.duration}</span>
                     </div>
-                    <span className="text-primary font-bold whitespace-nowrap">
-                      {plan.price}
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-primary font-bold whitespace-nowrap">
+                        {plan.price}
+                      </span>
+                      <motion.button
+                        onClick={() => handleAddToCart(i)}
+                        className="w-6 h-6 rounded-md bg-primary/15 text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                        whileTap={{ scale: 0.85 }}
+                      >
+                        <Plus className="w-3 h-3" />
+                      </motion.button>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -107,13 +127,13 @@ const ServiceCard = ({ service, index }: Props) => {
       {/* Bottom action */}
       <div className="px-4 py-3 border-t border-border bg-muted/30 flex gap-2">
         <motion.button
-          onClick={() => setPaymentOpen(true)}
+          onClick={() => handleAddToCart(0)}
           className="flex items-center justify-center gap-2 flex-1 text-xs font-medium py-2.5 rounded-lg bg-primary text-primary-foreground transition-colors duration-200"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <QrCode className="w-3.5 h-3.5" />
-          Mua ngay
+          <ShoppingCart className="w-3.5 h-3.5" />
+          Thêm vào giỏ
         </motion.button>
         <motion.a
           href="https://zalo.me/0944308352"
@@ -126,12 +146,6 @@ const ServiceCard = ({ service, index }: Props) => {
           💬
         </motion.a>
       </div>
-
-      <PaymentModal
-        open={paymentOpen}
-        onClose={() => setPaymentOpen(false)}
-        service={service}
-      />
     </motion.div>
   );
 };

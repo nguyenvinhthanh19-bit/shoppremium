@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Facebook } from "lucide-react";
 
 const HeroHeader = () => {
   return (
@@ -51,6 +52,17 @@ const HeroHeader = () => {
               whileTap={{ scale: 0.97 }}
             >
               📞 Hotline: 0775.502.008
+            </motion.a>
+            <motion.a
+              href="https://www.facebook.com/profile.php?id=61582723076533"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[hsl(220_60%_50%/0.12)] border border-[hsl(220_60%_50%/0.2)] text-[hsl(220_60%_55%)] font-medium"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <Facebook className="w-4 h-4" />
+              Facebook
             </motion.a>
           </motion.div>
         </div>

@@ -4,10 +4,13 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { CategoryTabs } from "@/components/CategoryTabs";
 import { HeroHeader } from "@/components/HeroHeader";
 import { SearchBar } from "@/components/SearchBar";
+import { CartButton } from "@/components/CartButton";
+import { CartDrawer } from "@/components/CartDrawer";
 
 const Index = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartOpen, setCartOpen] = useState(false);
 
   const currentCategory = categories.find((c) => c.id === activeCategory)!;
 
@@ -42,10 +45,21 @@ const Index = () => {
           <p>© 2026 Vĩnh Thành Studio. Mọi quyền được bảo lưu.</p>
           <p className="mt-2">
             Zalo: <span className="text-primary font-medium">0944.308.352</span> &bull; Hotline:{" "}
-            <span className="text-primary font-medium">0775.502.008</span>
+            <span className="text-primary font-medium">0775.502.008</span> &bull;{" "}
+            <a
+              href="https://www.facebook.com/profile.php?id=61582723076533"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary font-medium hover:underline"
+            >
+              Facebook
+            </a>
           </p>
         </div>
       </footer>
+
+      <CartButton onClick={() => setCartOpen(true)} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 };

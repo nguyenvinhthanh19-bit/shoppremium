@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import type { Service, ServicePlan } from "@/data/services";
+import { parsePrice } from "@/lib/payment";
 
 export type CartItem = {
   id: string;
@@ -20,21 +21,16 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | null>(null);
 
-const parsePrice = (price: string): number => {
-  if (price === "Liên hệ") return 0;
-  return parseInt(price.replace(/\./g, "").replace(" đ", "")) || 0;
-};
-
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
   const addItem = useCallback((service: Service, plan: ServicePlan) => {
-    const id = `${service.name}-${plan.accountType}-${plan.duration}`;
+    const id = `${service.sku}-${plan.accountType}-${plan.duration}`;
     setItems((prev) => {
       const existing = prev.find((item) => item.id === id);
       if (existing) {
         return prev.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
         );
       }
       return [...prev, { id, service, plan, quantity: 1 }];
@@ -50,7 +46,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       setItems((prev) => prev.filter((item) => item.id !== id));
     } else {
       setItems((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+        prev.map((item) => (item.id === id ? { ...item, quantity } : item)),
       );
     }
   }, []);
@@ -60,7 +56,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce(
     (sum, item) => sum + parsePrice(item.plan.price) * item.quantity,
-    0
+    0,
   );
 
   return (

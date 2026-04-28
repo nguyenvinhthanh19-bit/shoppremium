@@ -1,7 +1,11 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, ShoppingCart, Phone, MessageCircle, Facebook } from "lucide-react";
+import { Search, ShoppingCart, MessageCircle, Facebook, Wallet, User as UserIcon, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/hooks/useAuth";
+import { useWallet } from "@/hooks/useWallet";
+import { BANK_INFO } from "@/lib/payment";
+import logo from "@/assets/logo.png";
 
 type Props = {
   searchValue: string;
@@ -11,26 +15,23 @@ type Props = {
 
 const Navbar = ({ searchValue, onSearchChange, onCartClick }: Props) => {
   const { totalItems } = useCart();
+  const { user } = useAuth();
+  const { balance } = useWallet();
 
   return (
     <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-xl border-b border-border">
       <div className="container max-w-7xl mx-auto px-4">
-        {/* Top bar */}
-        <div className="flex items-center gap-4 py-3">
-          {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-primary/15 border border-primary/25 flex items-center justify-center text-lg">
-              🎯
-            </div>
+        <div className="flex items-center gap-3 py-3">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+            <img src={logo} alt="VT Studio" width={40} height={40} className="w-10 h-10" />
             <div className="hidden sm:block">
               <h1 className="text-base font-bold text-foreground leading-tight">
                 Vĩnh Thành <span className="text-primary">Studio</span>
               </h1>
               <p className="text-[10px] text-muted-foreground leading-none">Premium Accounts</p>
             </div>
-          </a>
+          </Link>
 
-          {/* Search bar */}
           <div className="flex-1 max-w-2xl mx-auto">
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -44,32 +45,43 @@ const Navbar = ({ searchValue, onSearchChange, onCartClick }: Props) => {
             </div>
           </div>
 
-          {/* Right actions */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <motion.a
-              href="https://zalo.me/0944308352"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              whileTap={{ scale: 0.95 }}
+            {user ? (
+              <Link
+                to="/tai-khoan"
+                className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors"
+              >
+                <Wallet className="w-4 h-4 text-primary" />
+                <div className="leading-tight">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Số dư</p>
+                  <p className="text-xs font-bold text-primary">
+                    {balance.toLocaleString("vi-VN")} đ
+                  </p>
+                </div>
+              </Link>
+            ) : (
+              <Link
+                to="/auth"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+              >
+                <LogIn className="w-4 h-4" />
+                Đăng nhập
+              </Link>
+            )}
+
+            <Link
+              to="/nap-tien"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-emerald-400 hover:bg-emerald-500/10 transition-colors"
             >
-              <MessageCircle className="w-4 h-4" />
-              <span>Zalo</span>
-            </motion.a>
-            <motion.a
-              href="https://www.facebook.com/profile.php?id=61582723076533"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              whileTap={{ scale: 0.95 }}
-            >
-              <Facebook className="w-4 h-4" />
-              <span>Facebook</span>
-            </motion.a>
+              <Wallet className="w-4 h-4" />
+              Nạp tiền
+            </Link>
+
             <motion.button
               onClick={onCartClick}
               className="relative flex items-center justify-center w-10 h-10 rounded-xl hover:bg-primary/10 transition-colors"
               whileTap={{ scale: 0.9 }}
+              aria-label="Giỏ hàng"
             >
               <ShoppingCart className="w-5 h-5 text-foreground" />
               {totalItems > 0 && (
@@ -82,39 +94,62 @@ const Navbar = ({ searchValue, onSearchChange, onCartClick }: Props) => {
                 </motion.span>
               )}
             </motion.button>
+
+            {user && (
+              <Link
+                to="/tai-khoan"
+                className="sm:hidden flex items-center justify-center w-10 h-10 rounded-xl hover:bg-primary/10"
+                aria-label="Tài khoản"
+              >
+                <UserIcon className="w-5 h-5 text-foreground" />
+              </Link>
+            )}
           </div>
         </div>
 
-        {/* Bottom nav bar */}
         <div className="flex items-center gap-1 pb-2 overflow-x-auto scrollbar-none -mx-4 px-4">
+          <Link
+            to="/nap-tien"
+            className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-400 whitespace-nowrap"
+          >
+            <Wallet className="w-3.5 h-3.5" /> Nạp tiền
+          </Link>
           <a
-            href="https://zalo.me/0944308352"
+            href={`https://zalo.me/${BANK_INFO.zalo}`}
             target="_blank"
             rel="noopener noreferrer"
             className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
-            Zalo
+            <MessageCircle className="w-3.5 h-3.5" /> Zalo
           </a>
           <a
-            href="https://www.facebook.com/profile.php?id=61582723076533"
+            href={BANK_INFO.facebook}
             target="_blank"
             rel="noopener noreferrer"
             className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-primary transition-colors whitespace-nowrap"
           >
-            <Facebook className="w-3.5 h-3.5" />
-            Facebook
+            <Facebook className="w-3.5 h-3.5" /> Facebook
           </a>
           <div className="hidden md:flex items-center gap-4 ml-auto text-xs text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-primary" />
-              <span>Hotline: <span className="text-foreground font-medium">0775.502.008</span></span>
-            </div>
-            <span className="text-border">|</span>
-            <div className="flex items-center gap-1.5">
+            <a
+              href={`https://zalo.me/${BANK_INFO.zalo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            >
               <MessageCircle className="w-3.5 h-3.5 text-primary" />
-              <span>Zalo: <span className="text-foreground font-medium">0944.308.352</span></span>
-            </div>
+              <span>Zalo: <span className="text-foreground font-medium">{BANK_INFO.zaloDisplay}</span></span>
+            </a>
+            <span className="text-border">|</span>
+            <a
+              href={BANK_INFO.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            >
+              <Facebook className="w-3.5 h-3.5 text-primary" />
+              <span>Facebook</span>
+            </a>
           </div>
         </div>
       </div>

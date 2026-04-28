@@ -8,8 +8,8 @@ export const BANK_INFO = {
   account: "10002863652",
   accountFormatted: "1000 2863 652",
   accountName: "NGUYEN VINH THANH",
-  zalo: "0944308352",
-  zaloDisplay: "0944.308.352",
+  zalo: "0775502008",
+  zaloDisplay: "0775.502.008",
   hotline: "0775502008",
   hotlineDisplay: "0775.502.008",
   facebook: "https://www.facebook.com/profile.php?id=61586797331724",
@@ -98,5 +98,18 @@ export const buildZaloMessage = ({
   itemsLabel: string;
 }) => {
   const text = `Xin chào shop, mình vừa chuyển khoản đơn ${orderCode} - ${formatVND(total)} cho ${itemsLabel}. Mong shop kiểm tra và gửi tài khoản giúp mình ạ!`;
+  return `https://zalo.me/${BANK_INFO.zalo}?body=${encodeURIComponent(text)}`;
+};
+
+/** Build a topup order code for wallet recharges: NAP{userIdShort}{ts} */
+export const generateTopupCode = (userId: string): string => {
+  const uid = userId.replace(/-/g, "").toUpperCase().slice(0, 6);
+  const ts = Date.now().toString(36).toUpperCase().slice(-6);
+  return `NAP${uid}${ts}`;
+};
+
+/** Build prefilled Zalo message for a topup */
+export const buildTopupZalo = (orderCode: string, amount: number) => {
+  const text = `Xin chào shop, mình vừa nạp tiền vào ví. Mã giao dịch: ${orderCode} - Số tiền: ${formatVND(amount)}. Mong shop kiểm tra và duyệt giúp mình ạ!`;
   return `https://zalo.me/${BANK_INFO.zalo}?body=${encodeURIComponent(text)}`;
 };

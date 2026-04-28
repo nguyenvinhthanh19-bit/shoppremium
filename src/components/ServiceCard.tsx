@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import type { Service } from "@/data/services";
-import { ChevronDown, ShoppingCart, Plus, BadgeCheck } from "lucide-react";
+import { ChevronDown, ShoppingCart, Plus, BadgeCheck, Zap } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { parsePrice, formatVND } from "@/lib/payment";
+import { SoldRating } from "@/components/SoldRating";
 
 type Props = {
   service: Service;
@@ -14,6 +16,7 @@ type Props = {
 const ServiceCard = ({ service, index }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const { addItem } = useCart();
+  const navigate = useNavigate();
 
   const numericPrices = service.plans
     .map((p) => parsePrice(p.price))
@@ -21,13 +24,18 @@ const ServiceCard = ({ service, index }: Props) => {
   const lowestPrice = numericPrices.length ? Math.min(...numericPrices) : 0;
   const displayPrice = lowestPrice ? formatVND(lowestPrice) : "Liên hệ";
 
-  const handleAddToCart = (planIndex: number) => {
+  const addToCart = (planIndex: number) => {
     const plan = service.plans[planIndex];
     addItem(service, plan);
     toast.success(`Đã thêm ${service.name}`, {
       description: `${plan.accountType} — ${plan.duration}`,
-      duration: 1800,
+      duration: 1500,
     });
+  };
+
+  const buyNow = (planIndex: number) => {
+    addToCart(planIndex);
+    setTimeout(() => navigate("/checkout"), 200);
   };
 
   const { color1, color2, emoji } = service.brand;
@@ -43,11 +51,8 @@ const ServiceCard = ({ service, index }: Props) => {
       {/* Brand header */}
       <div
         className="relative h-24 flex items-center justify-center overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${color1}, ${color2})`,
-        }}
+        style={{ background: `linear-gradient(135deg, ${color1}, ${color2})` }}
       >
-        {/* shine */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,0.25),transparent_60%)]" />
         <span
           className="relative text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] group-hover:scale-110 transition-transform duration-300"
@@ -56,7 +61,6 @@ const ServiceCard = ({ service, index }: Props) => {
           {emoji}
         </span>
 
-        {/* SKU badge */}
         <div className="absolute top-2.5 left-2.5">
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/30 backdrop-blur-sm text-[10px] font-bold text-white tracking-wide">
             <BadgeCheck className="w-3 h-3" />
@@ -79,12 +83,14 @@ const ServiceCard = ({ service, index }: Props) => {
           {service.name}
         </h3>
 
+        <SoldRating sku={service.sku} />
+
         <p className="text-[11px] text-muted-foreground mt-1.5 line-clamp-2 leading-relaxed min-h-[1.75rem]">
           {service.note || "Tài khoản chính hãng — bảo hành uy tín"}
         </p>
 
         {/* Price */}
-        <div className="mt-3 flex items-baseline gap-1">
+        <div className="mt-2.5 flex items-baseline gap-1">
           <span className="text-base font-extrabold text-primary">{displayPrice}</span>
           {lowestPrice > 0 && service.plans.length > 1 && (
             <span className="text-[10px] text-muted-foreground">trở lên</span>
@@ -98,16 +104,12 @@ const ServiceCard = ({ service, index }: Props) => {
             className="mt-2 flex items-center gap-1.5 text-[11px] text-primary/90 hover:text-primary transition-colors font-semibold"
           >
             {expanded ? "Ẩn bớt" : `Xem ${service.plans.length} gói`}
-            <motion.span
-              animate={{ rotate: expanded ? 180 : 0 }}
-              transition={{ duration: 0.25 }}
-            >
+            <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.25 }}>
               <ChevronDown className="w-3.5 h-3.5" />
             </motion.span>
           </button>
         )}
 
-        {/* Expanded plans */}
         <AnimatePresence initial={false}>
           {expanded && (
             <motion.div
@@ -124,20 +126,26 @@ const ServiceCard = ({ service, index }: Props) => {
                     className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-secondary/60 text-[11px] hover:bg-secondary transition-colors"
                   >
                     <div className="flex flex-col gap-0.5 min-w-0">
-                      <span className="text-foreground font-medium truncate">
-                        {plan.accountType}
-                      </span>
+                      <span className="text-foreground font-medium truncate">{plan.accountType}</span>
                       <span className="text-muted-foreground">{plan.duration}</span>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <span className="text-primary font-bold whitespace-nowrap">{plan.price}</span>
                       <motion.button
-                        onClick={() => handleAddToCart(i)}
+                        onClick={() => addToCart(i)}
                         className="w-6 h-6 rounded-md bg-primary/15 text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
                         whileTap={{ scale: 0.85 }}
                         aria-label={`Thêm ${plan.accountType}`}
                       >
                         <Plus className="w-3 h-3" />
+                      </motion.button>
+                      <motion.button
+                        onClick={() => buyNow(i)}
+                        className="w-6 h-6 rounded-md bg-emerald-500/15 text-emerald-400 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors"
+                        whileTap={{ scale: 0.85 }}
+                        aria-label={`Mua ngay ${plan.accountType}`}
+                      >
+                        <Zap className="w-3 h-3" />
                       </motion.button>
                     </div>
                   </div>
@@ -147,19 +155,29 @@ const ServiceCard = ({ service, index }: Props) => {
           )}
         </AnimatePresence>
 
-        {/* Spacer */}
         <div className="flex-1 min-h-2" />
 
-        {/* Bottom action */}
-        <motion.button
-          onClick={() => handleAddToCart(0)}
-          className="mt-3 flex items-center justify-center gap-2 w-full text-xs font-bold py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-opacity shadow-[var(--shadow-brand)]"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <ShoppingCart className="w-3.5 h-3.5" />
-          Thêm vào giỏ
-        </motion.button>
+        {/* Bottom actions: Cart + Buy Now */}
+        <div className="mt-3 grid grid-cols-2 gap-1.5">
+          <motion.button
+            onClick={() => addToCart(0)}
+            className="flex items-center justify-center gap-1 text-[11px] font-bold py-2.5 rounded-xl bg-secondary text-foreground hover:bg-primary/15 hover:text-primary transition-colors border border-border"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            Giỏ hàng
+          </motion.button>
+          <motion.button
+            onClick={() => buyNow(0)}
+            className="flex items-center justify-center gap-1 text-[11px] font-bold py-2.5 rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-brand)]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Zap className="w-3.5 h-3.5" />
+            Mua ngay
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

@@ -141,7 +141,7 @@ const ServiceCard = ({ service, index }: Props) => {
                       </motion.button>
                       <motion.button
                         onClick={() => buyNow(i)}
-                        className="w-6 h-6 rounded-md bg-emerald-500/15 text-emerald-400 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors"
+                        className="w-6 h-6 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-colors"
                         whileTap={{ scale: 0.85 }}
                         aria-label={`Mua ngay ${plan.accountType}`}
                       >

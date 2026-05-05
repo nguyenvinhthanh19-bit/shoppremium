@@ -110,7 +110,7 @@ const Navbar = ({ searchValue, onSearchChange, onCartClick }: Props) => {
         <div className="flex items-center gap-1 pb-2 overflow-x-auto scrollbar-none -mx-4 px-4">
           <Link
             to="/nap-tien"
-            className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-400 whitespace-nowrap"
+            className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-600 whitespace-nowrap"
           >
             <Wallet className="w-3.5 h-3.5" /> Nạp tiền
           </Link>

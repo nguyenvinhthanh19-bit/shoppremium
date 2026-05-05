@@ -1,83 +1,73 @@
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Users, Star, Shield } from "lucide-react";
+import { Zap, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroLaptop from "@/assets/hero-laptop.jpg";
 
 const HeroBanner = () => {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(175_80%_50%/0.15),transparent_60%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(45_100%_55%/0.08),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(270_80%_75%/0.25),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(250_85%_75%/0.18),transparent_60%)]" />
 
-      <div className="container max-w-7xl mx-auto px-4 py-10 md:py-14 relative z-10">
-        <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+      <div className="container max-w-7xl mx-auto px-4 py-12 md:py-20 relative z-10">
+        <div className="grid md:grid-cols-2 items-center gap-8 md:gap-12">
           <motion.div
-            className="flex-1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              Uy tín #1 — Bảo hành trọn đời
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-xs font-semibold text-primary mb-5">
+              <Zap className="w-3.5 h-3.5" />
+              Tài Khoản Chính Hãng
             </div>
-            <h2 className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight">
-              Tài Khoản <span className="text-primary">Premium</span>
+            <h1 className="text-4xl md:text-6xl font-extrabold text-foreground leading-[1.05] tracking-tight">
+              Mua Tài Khoản
               <br />
-              Chính Hãng — Giá Sốc
-            </h2>
-            <p className="text-sm md:text-base text-muted-foreground mt-3 max-w-md leading-relaxed">
-              Netflix, Spotify, ChatGPT, Canva, Capcut... 170+ dịch vụ. Nạp ví — mua nhanh trong 30 giây.
+              <span className="text-primary">Uy Tín.</span>
+            </h1>
+            <p className="text-base md:text-lg text-muted-foreground mt-5 max-w-md leading-relaxed">
+              Cung cấp tài khoản phần mềm, ứng dụng học tập, giải trí và làm việc chất lượng cao. Giao ngay — bảo hành trọn gói.
             </p>
 
-            {/* Stats badges */}
-            <div className="flex flex-wrap gap-3 mt-5">
-              <Stat icon={<Users className="w-3.5 h-3.5" />} label="5K+ khách" />
-              <Stat icon={<Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />} label="4.9 / 5" />
-              <Stat icon={<Shield className="w-3.5 h-3.5" />} label="Bảo hành 24/7" />
+            <div className="flex flex-wrap gap-3 mt-7">
+              <Link
+                to="/nap-tien"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-brand)]"
+              >
+                Xem Tất Cả Sản Phẩm
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <a
+                href="#products"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-card border border-border text-foreground font-bold text-sm hover:border-primary/40 transition-colors"
+              >
+                Học Tập & Khóa Học
+              </a>
             </div>
 
-            <div className="flex flex-wrap gap-2 mt-5">
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link
-                  to="/nap-tien"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-brand)]"
-                >
-                  💎 Nạp ví — Mua ngay
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-              <motion.a
-                href="#products"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-foreground font-semibold text-sm hover:bg-secondary/80 transition-colors"
-              >
-                Xem sản phẩm
-              </motion.a>
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mt-9 pt-7 border-t border-border max-w-md">
+              <Stat value="131+" label="Sản phẩm" />
+              <Stat value="4.9" label="Đánh giá TB" />
+              <Stat value="24h" label="Giao ngay" />
             </div>
           </motion.div>
 
           <motion.div
-            className="hidden md:flex items-center justify-center relative w-72 h-48"
-            initial={{ opacity: 0, scale: 0.9 }}
+            className="hidden md:block relative"
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
           >
-            {["🎬", "🎵", "🤖", "🎨", "📚", "☁️"].map((emoji, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-14 h-14 rounded-2xl bg-card border border-border flex items-center justify-center text-2xl shadow-lg"
-                style={{
-                  left: `${(i % 3) * 38}%`,
-                  top: `${Math.floor(i / 3) * 55}%`,
-                }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, delay: i * 0.3, repeat: Infinity, ease: "easeInOut" }}
-              >
-                {emoji}
-              </motion.div>
-            ))}
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary/15 to-accent/15 p-6 shadow-[var(--shadow-elev)]">
+              <img
+                src={heroLaptop}
+                alt="Tài khoản premium"
+                width={1024}
+                height={768}
+                className="w-full h-auto rounded-2xl"
+              />
+            </div>
           </motion.div>
         </div>
       </div>
@@ -85,9 +75,10 @@ const HeroBanner = () => {
   );
 };
 
-const Stat = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
-  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-card border border-border text-xs font-bold text-foreground">
-    <span className="text-primary">{icon}</span> {label}
+const Stat = ({ value, label }: { value: string; label: string }) => (
+  <div>
+    <p className="text-2xl md:text-3xl font-extrabold text-foreground">{value}</p>
+    <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
   </div>
 );
 

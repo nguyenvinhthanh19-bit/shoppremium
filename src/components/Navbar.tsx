@@ -71,7 +71,7 @@ const Navbar = ({ searchValue, onSearchChange, onCartClick }: Props) => {
 
             <Link
               to="/nap-tien"
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-emerald-600 hover:bg-emerald-50 transition-colors"
             >
               <Wallet className="w-4 h-4" />
               Nạp tiền
